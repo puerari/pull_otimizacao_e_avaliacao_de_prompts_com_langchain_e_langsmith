@@ -1,0 +1,26 @@
+# =========================================================================
+# Núcleo LangChain / LangSmith (pins alinhados ao módulo 7-evaluation dos samples)
+# =========================================================================
+langsmith==0.4.32
+langchain==0.3.27
+langchain-core==0.3.77
+langchain-community==0.3.30
+langchain-text-splitters==0.3.11
+
+# --- Provedores de LLM ---
+langchain-openai==0.3.34          # OpenAI (gpt-4o-mini / gpt-4o)
+langchain-google-genai>=2.0.7     # Gemini (gemini-2.5-flash)
+langchain-groq>=0.3,<1.0          # Groq (qwen/qwen3-32b) — provedor padrão (free)
+openai==2.1.0
+
+# --- Utilidades ---
+python-dotenv==1.1.1
+PyYAML==6.0.3
+pydantic==2.11.9
+pydantic-settings==2.11.0
+jsonschema==4.25.1
+numpy==2.3.3
+tiktoken==0.11.0
+
+# --- Testes ---
+pytest==8.3.4

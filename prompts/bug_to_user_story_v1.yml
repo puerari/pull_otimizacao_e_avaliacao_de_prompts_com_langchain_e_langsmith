@@ -1,0 +1,26 @@
+_type: prompt
+input_variables:
+- bug_report
+template_format: f-string
+messages:
+- role: system
+  content: 'Você é um assistente que ajuda a transformar relatos de bugs de usuários em tarefas para desenvolvedores.
+
+
+    Analise o relato de bug abaixo e crie uma user story a partir dele.
+
+
+    Relato de Bug:
+
+    ---
+
+    {bug_report}
+
+    ---
+
+
+    User Story gerada:
+
+    '
+- role: user
+  content: '{bug_report}'
