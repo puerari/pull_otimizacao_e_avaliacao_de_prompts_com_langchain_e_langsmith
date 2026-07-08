@@ -46,11 +46,11 @@ O prompt otimizado (`prompts/bug_to_user_story_v2.yml`) combina **três** técni
 Todas são declaradas em `metadata.techniques` do YAML.
 
 ### 1. Role Prompting
-**O quê:** o `system` define uma persona detalhada — uma *Product Owner sênior,
+**O quê:** o `system` define uma persona detalhada - uma *Product Owner sênior,
 especialista em Agile e BDD, com 10 anos de experiência*.
 
 **Por quê:** ancorar o modelo num papel especialista eleva a qualidade, o
-vocabulário de domínio e a consistência das user stories — impacta diretamente
+vocabulário de domínio e a consistência das user stories - impacta diretamente
 **Helpfulness** e **Clarity**.
 
 **Exemplo (trecho do prompt):**
@@ -63,14 +63,14 @@ vocabulário de domínio e a consistência das user stories — impacta diretame
 de concorrência) no `user`, mostrando o formato exato esperado.
 
 **Por quê:** exemplos ancoram o formato de saída (seções Markdown, critérios
-Dado/Quando/Então) e o mapeamento para as categorias de requisito — melhora
+Dado/Quando/Então) e o mapeamento para as categorias de requisito - melhora
 **Correctness**, **Clarity** e, sobretudo, **Precision/F1** (o modelo aprende a
 classificar as categorias corretas).
 
 **Exemplo:** o Bug *"cadastro conclui com e-mail em branco e o login quebra"* é
 mapeado para uma user story com critérios de aceite e as categorias **centrais**
 `input_validation, error_handling` (o prompt instrui a listar só as 1-3 categorias
-mais inequívocas — disciplina que elevou Precision/F1 na iteração).
+mais inequívocas - disciplina que elevou Precision/F1 na iteração).
 
 ### 3. Chain of Thought (CoT)
 **O quê:** o prompt instrui um raciocínio passo a passo (ator → comportamento
@@ -78,11 +78,11 @@ atual → esperado → valor → critérios → categorias), exposto de forma co
 seção `## Análise`.
 
 **Por quê:** decompor o problema antes de escrever a story reduz omissões e
-aumenta a completude e a corretude — crítico para bugs **complexos** (concorrência,
+aumenta a completude e a corretude - crítico para bugs **complexos** (concorrência,
 segurança, integridade de dados). Impacta **Helpfulness** e **Correctness**.
 
 **Exemplo (formato induzido):**
-> `## Análise` — Ator / Comportamento atual / Comportamento esperado / Impacto,
+> `## Análise` - Ator / Comportamento atual / Comportamento esperado / Impacto,
 > seguido das seções `## User Story`, `## Critérios de Aceite` e
 > `## Categorias de Requisito`.
 
@@ -107,14 +107,14 @@ As 5 métricas (limiar **0.8**), agrupadas como no enunciado:
 ### Métricas Derivadas
 | Métrica | Implementação |
 |---|---|
-| **Helpfulness** | LLM-as-judge — quão útil/acionável é a story para o time. |
-| **Correctness** | LLM-as-judge **com referência** (gabarito do dataset) — equivalência semântica. |
+| **Helpfulness** | LLM-as-judge - quão útil/acionável é a story para o time. |
+| **Correctness** | LLM-as-judge **com referência** (gabarito do dataset) - equivalência semântica. |
 
 > **Por que categorias para F1/Precision?** Comparar prosa livre com conjuntos de
 > tokens zera métricas de sobreposição (a linguagem natural nunca casa
 > exatamente). Seguindo o padrão dos samples do curso
 > (`7-evaluation/2-precision`), o F1/Precision compara apenas **vocabulário
-> controlado** — aqui, as categorias de requisito que a user story cobre. Isso
+> controlado** - aqui, as categorias de requisito que a user story cobre. Isso
 > torna a métrica objetiva, reprodutível e alcançável.
 
 Os juízes LLM são **provider-agnósticos**: usam o modelo configurado em
@@ -147,23 +147,23 @@ cp .env.example .env
 # edite .env e preencha:
 #   GROQ_API_KEY (ou GOOGLE_API_KEY / OPENAI_API_KEY)
 #   LANGCHAIN_API_KEY
-#   LANGSMITH_USERNAME  (seu handle no LangSmith — opcional, ver abaixo)
+#   LANGSMITH_USERNAME  (seu handle no LangSmith - opcional, ver abaixo)
 ```
 Padrão do `.env`: `LLM_PROVIDER=groq`, `LLM_MODEL=qwen/qwen3-32b` (responder e juiz).
 Alternativas: `google_genai` (`gemini-2.5-flash`) ou `openai` (`gpt-4o-mini` +
 juiz `gpt-4o`).
 
 > **Nota sobre o Groq free tier:** o limite é de tokens por minuto (TPM ~6000),
-> então rode a avaliação serializada — `python src/evaluate.py --max-concurrency 1`
+> então rode a avaliação serializada - `python src/evaluate.py --max-concurrency 1`
 > (leva ~10 min para os 15 exemplos, com retries automáticos respeitando o limite).
 
 #### Sobre o `LANGSMITH_USERNAME` (handle público)
 
-É o **handle público** do LangSmith — o slug que aparece **antes da barra** no
+É o **handle público** do LangSmith - o slug que aparece **antes da barra** no
 identificador do prompt (ex.: `leonanluppi/bug_to_user_story_v1` → handle
 `leonanluppi`). **Não** é o seu e-mail nem o ID (UUID) do workspace.
 
-- **O handle não existe por padrão** — você precisa **criá-lo uma vez**: em
+- **O handle não existe por padrão** - você precisa **criá-lo uma vez**: em
   https://smith.langchain.com → **Prompts** → crie/publique um prompt como
   **Public**; o LangSmith abre um modal *"Create a handle"* para você escolher um
   slug único. (O push público é bloqueado até o handle existir.)
@@ -210,18 +210,10 @@ Avaliação executada com **Groq / `qwen/qwen3-32b`** (responder e juiz) sobre o
 
 ### Links (LangSmith)
 
-> Para tornar um experimento público: abra-o no LangSmith → botão **Share** →
-> *Make public* → copie a URL e cole abaixo.
-
 - **Experimento v2 (aprovado):** [ver no LangSmith](https://smith.langchain.com/public/192d47d0-291e-473b-9df5-e185032f0522/d/compare?selectedSessions=c080e00b-ce74-40c1-a768-37911cbadf47)
 - **Experimento v1 (comparação):** [ver no LangSmith](https://smith.langchain.com/public/192d47d0-291e-473b-9df5-e185032f0522/d/compare?selectedSessions=b0cea98f-4b40-4555-a355-0c3ff2c1063f)
 - **Comparação v1 vs v2 (lado a lado):** [ver no LangSmith](https://smith.langchain.com/public/192d47d0-291e-473b-9df5-e185032f0522/d/compare?selectedSessions=b0cea98f-4b40-4555-a355-0c3ff2c1063f,c080e00b-ce74-40c1-a768-37911cbadf47)
 - **Prompt no Prompt Hub (público):** [`puerari/bug_to_user_story_v2`](https://smith.langchain.com/hub/puerari/bug_to_user_story_v2)
-
-> Um único **share público do dataset** (`192d47d0-…`) expõe ambos os experimentos;
-> o parâmetro `selectedSessions` seleciona qual visualizar — v2 (`c080e00b`), v1
-> (`b0cea98f`) ou os dois na comparação lado a lado. O dataset com os 15 exemplos
-> também fica visível nesse mesmo share.
 
 ### Tabela comparativa (v1 vs v2)
 
@@ -233,7 +225,7 @@ Avaliação executada com **Groq / `qwen/qwen3-32b`** (responder e juiz) sobre o
 | Clarity | 0.84 | **0.99** | ≥ 0.8 |
 | Precision | 1.00¹ | **0.83** | ≥ 0.8 |
 | **MÉDIA** | 0.73 | **0.88** | ≥ 0.8 |
-| **STATUS** | ❌ REPROVADO | ✅ **APROVADO** | — |
+| **STATUS** | ❌ REPROVADO | ✅ **APROVADO** | - |
 
 Experimentos: v1 `bug_to_user_story_v1-91539dff` · v2 `bug_to_user_story_v2-a03aac59`.
 
@@ -243,7 +235,7 @@ F1/Precision de **0.76 → 0.83** (gabarito recalibrado para categorias centrais
 prompt conservador), sem sacrificar as demais métricas.
 
 <sub>¹ A Precision 1.00 do v1 é um artefato: o prompt ruim quase não emite
-categorias, mas as poucas que emite acertam — por isso o F1 (que também depende do
+categorias, mas as poucas que emite acertam - por isso o F1 (que também depende do
 recall) é o indicador honesto da diferença de qualidade.</sub>
 
 ### Análise crítica e limitações
@@ -254,29 +246,27 @@ Uma leitura honesta dos números acima:
   (Helpfulness, Correctness, Clarity) ficaram altas até para o v1 (0.80–0.84):
   o `qwen/qwen3-32b` produz texto coerente mesmo com um prompt vago, e juízes LLM
   tendem a premiar fluência. Por isso, **o F1-Score (métrica objetiva, sem LLM) é
-  o discriminador mais confiável** entre v1 e v2 — 0.15 vs 0.83.
+  o discriminador mais confiável** entre v1 e v2 - 0.15 vs 0.83.
 - **Juiz = modelo respondente.** Por restrição de quota do free tier, o mesmo
   modelo atua como respondente e como juiz, o que introduz um viés de
   autoavaliação. O ideal metodológico (e o que o enunciado sugere) é um **juiz
-  independente e mais forte** — ex.: `gpt-4o` — o que tornaria a avaliação mais
+  independente e mais forte** - ex.: `gpt-4o` - o que tornaria a avaliação mais
   rigorosa. O código já suporta isso via `JUDGE_PROVIDER`/`JUDGE_MODEL` no `.env`.
 - **F1/Precision são uma proxy.** Medem a cobertura de *categorias de requisito*
-  (vocabulário controlado), não a prosa da user story — escolha necessária para
+  (vocabulário controlado), não a prosa da user story - escolha necessária para
   obter uma métrica objetiva e reprodutível numa tarefa gerativa (ver
   [Como Funciona a Avaliação](#como-funciona-a-avaliação)).
 
-Nada disso invalida o resultado — o v2 atinge ≥ 0.8 em todas as métricas de fato —,
+Nada disso invalida o resultado - o v2 atinge ≥ 0.8 em todas as métricas de fato -,
 mas explicita o que aumentaria o rigor numa próxima iteração.
 
 ### Evidências (via link público)
 
-Conforme o enunciado, o **link público do dashboard** substitui os screenshots
-("Link público **(ou screenshots)** do dashboard"). No experimento v2 tornado
-público ficam visíveis as três evidências exigidas:
+No experimento v2 tornado público ficam visíveis as três evidências exigidas:
 
-- **Dataset com 15 exemplos** — os 15 runs do experimento (um por exemplo).
-- **Execuções do v2 com notas ≥ 0.8** — os scores das 5 métricas por run e no resumo.
-- **Tracing detalhado de ≥ 3 exemplos** — abra qualquer run do experimento para ver
+- **Dataset com 15 exemplos** - os 15 runs do experimento.
+- **Execuções do v2 com notas ≥ 0.8** - os scores das 5 métricas por run e no resumo.
+- **Tracing detalhado de ≥ 3 exemplos** - abra qualquer run do experimento para ver
   a árvore de execução (prompt enviado ao LLM, resposta gerada e scores dos
   evaluators). As mesmas chamadas também ficam no menu **Tracing / Observability**,
   no projeto `bug_to_user_story` (definido por `LANGCHAIN_PROJECT`), com detalhes de
